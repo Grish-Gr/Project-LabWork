@@ -29,4 +29,6 @@ public class FrequencyGenerator : MonoBehaviour
             Debug.Log("Current Frequency: " + currentFrequency);
         }
     }
+
+    public int GetCurrentFrequency() => currentFrequency;
 }

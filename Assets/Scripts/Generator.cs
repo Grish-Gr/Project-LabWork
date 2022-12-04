@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GainGenerator gain;
+    public FrequencyGenerator frequency;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public float GetCurrentGainGenerator() => gain.GetGain();
+    public float GetCurrentFrequencyGenerator() => frequency.GetCurrentFrequency();
 }
