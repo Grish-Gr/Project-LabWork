@@ -1,23 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AngleHorn : MonoBehaviour
+public class AngleHorn : ActionElement
 {
-    void Update()
+    [SerializeField]
+    private Text textValueAngle; 
+    private int currentAngle;
+    public int CurrentAngle
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        get { return this.currentAngle; }
+        set 
         {
-            transform.Rotate(5f, 0f, 0f);
-        }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            transform.Rotate(-5f, 0f, 0f);
+            var angle = value < 0 ? 360 + value : value;
+            angle = angle >= 360 ? angle - 360 : angle;
+            this.currentAngle = angle;
+            listListeners.ForEach(list => list.Invoke(angle) );
         }
     }
-
-    public int GetCurrentAngle()
+    private List<Listener> listListeners = new List<Listener>();
+    public delegate void Listener(int angle);
+    public void AddListener(Listener listener)
     {
-        return Mathf.Abs((int)transform.eulerAngles.x);
+        listListeners.Add(listener);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X)) { UpValue(); }
+        if (Input.GetKeyDown(KeyCode.Z)) { DownValue(); }
+    }
+
+    public override void UpValue()
+    {
+        CurrentAngle += 5;
+        textValueAngle.text = CurrentAngle.ToString();
+        transform.Rotate(5f, 0f, 0f);
+    }
+
+    public override void DownValue()
+    {
+        CurrentAngle -= 5;
+        textValueAngle.text = CurrentAngle.ToString();
+        transform.Rotate(-5f, 0f, 0f);
     }
 }

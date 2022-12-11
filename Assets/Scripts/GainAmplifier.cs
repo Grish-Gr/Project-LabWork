@@ -2,42 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GainAmplifier : MonoBehaviour
+public class GainAmplifier : ActionElement
 {
-    public float MinGain;
-    public float MaxGain;
-    public float StepGain;
+    [SerializeField]
+    private float MinGain;
+    [SerializeField]
+    private float MaxGain;
+    [SerializeField]
+    private float StepGain;
     private float currentGain;
+    public float CurrentGain
+    {
+        get { return this.currentGain; }
+        set 
+        {
+            this.currentGain = value;
+            listListeners.ForEach(list => list.Invoke(value) );
+        }
+    }
+    private List<Listener> listListeners = new List<Listener>();
+    public delegate void Listener(float value);
+
+    public void AddListener(Listener listener)
+    {
+        listListeners.Add(listener);
+    }
 
     void Start()
     {
         currentGain = MinGain;
     }
 
-    void Update()
+    public override void UpValue()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            currentGain += StepGain;
-            if (currentGain > MaxGain)
-                currentGain = MaxGain;
+        CurrentGain += StepGain;
+            if (CurrentGain > MaxGain)
+                CurrentGain = MaxGain;
             else
                 transform.Rotate(0, 0, 20f);
-            Debug.Log("Current Gain Amplifier: " + currentGain);
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            currentGain -= StepGain;
-            if (currentGain < MinGain)
-                currentGain = MinGain;
-            else
-                transform.Rotate(0, 0, -20f);
-            Debug.Log("Current Gain Amplifier: " + currentGain);
-        }
     }
 
-    public float GetGain()
+    public override void DownValue()
     {
-        return currentGain;
+        CurrentGain -= StepGain;
+            if (CurrentGain < MinGain)
+                CurrentGain = MinGain;
+            else
+                transform.Rotate(0, 0, -20f);
     }
 }
