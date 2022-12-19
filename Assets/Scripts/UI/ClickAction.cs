@@ -19,11 +19,13 @@ public class ClickAction : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log("FKAK:FL");
         this.GetComponent<Renderer>().material = materialPointEnter;
     }
 
     public void OnPointerExit(PointerEventData eventData)
 	{
+        Debug.Log("FJAKLJFKLAJLKF:FL");
 		this.GetComponent<Renderer>().material = materialPointExit;
 	}
 
