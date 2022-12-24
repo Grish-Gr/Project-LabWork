@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public int count;
-    public int num;
+    public float count;
+    public float num;
+    public float temp;
     public GameObject NextStep;
     // Start is called before the first frame update
     private void Start()
@@ -14,13 +15,30 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void ButClick()
+    public void ButClickPlus()
     {
-        count++;
+        count=count+temp;
         Debug.Log(count);
-        if (count % num == 0)
+        if (count == num)
         {
-            NextStep.SetActive(!NextStep.activeSelf);
+            NextStep.SetActive(true);
+        }
+        else
+        {
+            NextStep.SetActive(false);
+        }
+    }
+    public void ButClickMinus()
+    {
+        count=count-temp;
+        Debug.Log(count);
+        if (count == num)
+        {
+            NextStep.SetActive(true);
+        }
+        else
+        {
+            NextStep.SetActive(false);
         }
     }
 }
