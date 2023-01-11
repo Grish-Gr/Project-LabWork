@@ -16,6 +16,14 @@ public class Amplifier : MonoBehaviour
     private Text textValueGain;
     [SerializeField]
     private Text textValueSignal;
+    [SerializeField]
+    private AddMetalPlate metalPlate;
+    [SerializeField]
+    private AddDialecticPlate dialecticPlate;
+    [SerializeField]
+    private DeleteAllPlate deleteAllPlate;
+    private TypeValueSignal currentTypeValueSignal = TypeValueSignal.WITHOUT_PLATE;
+    private (double length, double width, double thick) currentSizePLate;
     private static float MIN_VALUE_SIGNAL = 0.0f;
     private static float MAX_VALUE_SIGNAL = 100.0f;
     private double simpleSignal;
@@ -48,15 +56,49 @@ public class Amplifier : MonoBehaviour
         horn.AddListener(angle => {
             ShowCurrentValueSignal();
         });
+        metalPlate.AddListener(listener: (double length, double width, double thick) => {
+            currentSizePLate = (length, width, thick);
+            currentTypeValueSignal = TypeValueSignal.WITH_METAL_PLATE;
+            ShowCurrentValueSignal();
+        });
+        dialecticPlate.AddListener(listener: (double length, double width, double thick) => {
+            currentSizePLate = (length, width, thick);
+            currentTypeValueSignal = TypeValueSignal.WITH_DIALECTRIC_PLATE;
+            ShowCurrentValueSignal();
+        });
+        deleteAllPlate.AddListener(delegate {
+            currentTypeValueSignal = TypeValueSignal.WITHOUT_PLATE;
+            ShowCurrentValueSignal();
+        });
     }
     
     public void ShowCurrentValueSignal()
     {
-        // For value signal without metall/plastic plate 
-        // gainGenerator * gainAmpifilier * cos(AngleHorn)^2 =
-        SimpleSignal = Math.Round(
-            Math.Pow(Math.Cos((horn.CurrentAngle / 180.0) * Math.PI), 2) * gain.CurrentGain * generator.gain.CurrentGain,
-            2);
-        textValueSignal.text = SimpleSignal.ToString();
+        switch (currentTypeValueSignal){
+            case TypeValueSignal.WITHOUT_PLATE: {
+                // For value signal without metall/plastic plate 
+                // gainGenerator * gainAmpifilier * cos(AngleHorn)^2 =
+                SimpleSignal = Math.Round(
+                    Math.Pow(Math.Cos((horn.CurrentAngle / 180.0) * Math.PI), 2) * gain.CurrentGain * generator.gain.CurrentGain,
+                    2);
+                textValueSignal.text = SimpleSignal.ToString();
+            }
+            break;
+            case TypeValueSignal.WITH_METAL_PLATE: {
+                
+            }
+            break;
+            case TypeValueSignal.WITH_DIALECTRIC_PLATE: {
+
+            }
+            break;
+        }
+    }
+
+    enum TypeValueSignal
+    {
+        WITH_METAL_PLATE,
+        WITH_DIALECTRIC_PLATE,
+        WITHOUT_PLATE
     }
 }
